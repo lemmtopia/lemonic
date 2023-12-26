@@ -1,2 +1,3 @@
 # lemonic
- A game development library inspired by raylib and made with SDL2.
+
+lemonic is yet another library to enjoy game programming.

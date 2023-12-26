@@ -1,0 +1,1 @@
+gcc code/example.c -lSDL2
