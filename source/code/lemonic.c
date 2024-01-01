@@ -1,4 +1,11 @@
 #include "lemonic.h"
+#include <math.h>
+
+screen_t screen;
+
+SDL_Window* window;
+SDL_Renderer* renderer;
+SDL_Texture* texture;
 
 void init_window(int width, int height, char* title, uint32_t color)
 { 
@@ -55,4 +62,18 @@ void draw_rect(int x, int y, int width, int height, uint32_t color)
       screen.pixels[j * screen.width + i] = color;
     }
   }
+}
+
+void draw_line(int x1, int y1, int x2, int y2, uint32_t color)
+{
+    int minx = (int)fmin((double)x1, (double)x2);    
+    int maxx = (int)fmax((double)x1, (double)x2);    
+    int miny = (int)fmin((double)y1, (double)y2);    
+    int maxy = (int)fmax((double)y1, (double)y2);    
+
+    for (int i = miny; i < miny + maxy; i++)
+    {
+        int j = minx + (maxx - minx) * (i - miny) / (maxy - miny);
+        screen.pixels[i * screen.width + j] = color;
+    }
 }
