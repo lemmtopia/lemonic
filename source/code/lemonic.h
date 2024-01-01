@@ -1,8 +1,11 @@
 #ifndef LEMONIC_H
 #define LEMONIC_H
 
+#include <SDL2/SDL_keyboard.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 #define SDL_MAIN_HANDLED
@@ -20,11 +23,43 @@ typedef struct screen_t
   uint32_t* pixels;
 } screen_t;
 
+typedef screen_t sprite_t;
+
 #define CORNBLUE 0x7288E5
 #define TOMATO 0xD7402B
 #define YELLOW 0xFFFF00
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
+
+enum KEYS
+{
+    K_A,   
+    K_B,   
+    K_C,   
+    K_D,
+    K_E,
+    K_F,
+    K_G,
+    K_H,
+    K_I,
+    K_J,
+    K_K,
+    K_L,
+    K_M,
+    K_N,
+    K_O,
+    K_P,
+    K_Q,
+    K_R,
+    K_S,
+    K_T,
+    K_U,
+    K_V,
+    K_W,
+    K_X,
+    K_Y,
+    K_Z,
+};
 
 /* math stuff */
 #define PI 3.1415f
@@ -193,6 +228,69 @@ static void fill_circle(int x, int y, int r, uint32_t color)
             draw_line(x + (int)xx, j, x - (int)xx, j, color);
         }
     }   
+}
+
+static void clear_screen(uint32_t color)
+{
+    for (int i = 0; i < screen.width * screen.height; i++)
+    {
+        screen.pixels[i] = color;
+    }
+}
+
+static int is_key_down(int key)
+{
+    const uint8_t* state = SDL_GetKeyboardState(NULL);  
+
+    if (state[key + 4]) 
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static sprite_t load_ppm(char* path)
+{
+    sprite_t spr;
+
+    FILE* file = fopen(path, "r");
+
+    char format[2];
+    fscanf(file, "%s\n", format);
+    if (strcmp(format, "P6") == 0)
+    {
+        fscanf(file, "%d %d\n", &spr.width, &spr.height);
+
+        int blah;
+        fscanf(file, "%d\n", &blah);
+
+        spr.pixels = (uint32_t*)malloc(spr.width * spr.height * sizeof(uint32_t));
+
+        for (int i = 0; i < spr.width * spr.height; i++)
+        {
+            uint8_t r, g, b;
+            fread(&r, 1, 1, file);
+            fread(&g, 1, 1, file);
+            fread(&b, 1, 1, file);
+
+            spr.pixels[i] = (r << 16) | (g << 8) | b;
+        }
+    }
+
+    fclose(file);
+    return spr;
+}
+
+static void draw_sprite(sprite_t spr, int x, int y)
+{
+    for (int i = 0; i < spr.width; i++)
+    {
+        for (int j = 0; j < spr.height; j++)
+        {
+            draw_pixel(x + i, y + j, spr.pixels[j * spr.width + i]);
+        }
+    }
 }
 
 #endif
