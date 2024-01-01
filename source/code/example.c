@@ -1,16 +1,16 @@
-#include "lemonic.c"
 #include "lemonic.h"
 
 int main(void)
 { 
-  init_window(640, 480, "basic window", CORNBLUE);
+  init_window(320, 180, "basic window", 3, CORNBLUE);
 
   while (!window_should_close())
   {
-    draw_rect(20, 20, 80, 80, WHITE);
-    draw_rect(40, 80, 80, 120, BLACK);
-    draw_line(20, 20, 50, 80, TOMATO);
-    draw_line(20, 10, 80, 180, TOMATO);
+    draw_rect(-20, 20, 80, 80, WHITE);
+    draw_rect(40, 80, 80, 180, BLACK);
+    draw_line(20, 69, 50, 120, TOMATO);
+    draw_line(42, 69, 50, 160, TOMATO);
+    draw_pixel(3, 3, YELLOW);
     update_pixels();
   } 
 
