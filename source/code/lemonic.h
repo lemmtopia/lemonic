@@ -2,6 +2,7 @@
 #define LEMONIC_H
 
 #include <SDL2/SDL_keyboard.h>
+#include <SDL2/SDL_timer.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -19,8 +20,8 @@
 
 typedef struct screen_t
 {
-  int width, height;
-  uint32_t* pixels;
+    int width, height;
+    uint32_t* pixels;
 } screen_t;
 
 typedef screen_t sprite_t;
@@ -66,7 +67,7 @@ enum KEYS
 
 typedef struct vec2_t
 {
-  float x, y;
+    float x, y;
 } vec2_t;
 
 /* data */
@@ -79,48 +80,49 @@ static SDL_Texture* texture;
 /* main definitions */
 static void init_window(int width, int height, char* title, int scale, uint32_t color)
 { 
-  window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width * scale, height * scale, 0);  
-  renderer = SDL_CreateRenderer(window, -1, 0);
-  texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width * scale, height * scale, 0);  
+    renderer = SDL_CreateRenderer(window, -1, 0);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
 
-  screen.width = width;
-  screen.height = height;
-  screen.pixels = (uint32_t*)malloc(screen.width * screen.height * sizeof(uint32_t));
+    screen.width = width;
+    screen.height = height;
+    screen.pixels = (uint32_t*)malloc(screen.width * screen.height * sizeof(uint32_t));
 
-  for (int i = 0; i < screen.width * screen.height; i++)
-  {
-    screen.pixels[i] = color;
-  }
+    for (int i = 0; i < screen.width * screen.height; i++)
+    {
+        screen.pixels[i] = color;
+    }
 }
 
 static void update_pixels()
 {
-  SDL_UpdateTexture(texture, NULL, screen.pixels, screen.width * 4);
-  SDL_RenderClear(renderer);
-  SDL_RenderCopy(renderer, texture, NULL, NULL);
-  SDL_RenderPresent(renderer);
+    SDL_UpdateTexture(texture, NULL, screen.pixels, screen.width * 4);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+    SDL_Delay(1000 / 60);
 }
 
 static int window_should_close()
 {
-  SDL_Event ev;
-  if (SDL_PollEvent(&ev))
-  {
-    if (ev.type == SDL_QUIT)
+    SDL_Event ev;
+    if (SDL_PollEvent(&ev))
     {
-      return TRUE;
+        if (ev.type == SDL_QUIT)
+        {
+            return TRUE;
+        }
     }
-  }
 
-  return FALSE;
+    return FALSE;
 }
 
 static void quit_window()
 {
-  SDL_DestroyTexture(texture);
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+    SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 static void draw_pixel(int x, int y, uint32_t color)
@@ -128,19 +130,19 @@ static void draw_pixel(int x, int y, uint32_t color)
     if (x >= 0 && x < screen.width &&
         y >= 0 && y < screen.height)
     {
-      screen.pixels[y * screen.width + x] = color;
+        screen.pixels[y * screen.width + x] = color;
     }
 }
 
 static void draw_rect(int x, int y, int width, int height, uint32_t color)
 {
-  for (int i = x; i < x + width; i++)
-  {
-    for (int j = y; j < y + height; j++)
+    for (int i = x; i < x + width; i++)
     {
-        draw_pixel(i, j, color);
+        for (int j = y; j < y + height; j++)
+        {
+            draw_pixel(i, j, color);
+        }
     }
-  }
 }
 
 static void draw_line(int x1, int y1, int x2, int y2, uint32_t color)
