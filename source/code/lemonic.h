@@ -1,8 +1,6 @@
 #ifndef LEMONIC_H
 #define LEMONIC_H
 
-#include <SDL2/SDL_keyboard.h>
-#include <SDL2/SDL_timer.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -18,6 +16,9 @@
 #define TRUE  1
 #define FALSE 0
 
+#define FPS 60
+#define TARGET_FRAME_TIME (1000 / FPS)
+
 typedef struct screen_t
 {
     int width, height;
@@ -29,6 +30,7 @@ typedef screen_t sprite_t;
 #define CORNBLUE 0x7288E5
 #define TOMATO 0xD7402B
 #define YELLOW 0xFFFF00
+#define GREEN 0x00FF00
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
 
@@ -77,6 +79,9 @@ static SDL_Window* window;
 static SDL_Renderer* renderer;
 static SDL_Texture* texture;
 
+static float delta_time;
+static float last_frame_time;
+
 /* main definitions */
 static void init_window(int width, int height, char* title, int scale, uint32_t color)
 { 
@@ -94,13 +99,28 @@ static void init_window(int width, int height, char* title, int scale, uint32_t 
     }
 }
 
+static void update_dt()
+{
+    /* get the delta time */
+    delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
+
+    int delay = TARGET_FRAME_TIME - (SDL_GetTicks() - last_frame_time); 
+
+    if (delay > 0 && delay <= TARGET_FRAME_TIME)
+    {
+        SDL_Delay(delay);
+    }
+
+    /* update the last frame time to calculate stuff again */
+    last_frame_time = SDL_GetTicks();
+}
+
 static void update_pixels()
 {
     SDL_UpdateTexture(texture, NULL, screen.pixels, screen.width * 4);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
-    SDL_Delay(1000 / 60);
 }
 
 static int window_should_close()
