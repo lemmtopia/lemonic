@@ -154,7 +154,7 @@ static void draw_pixel(int x, int y, uint32_t color)
     }
 }
 
-static void draw_rect(int x, int y, int width, int height, uint32_t color)
+static void fill_rect(int x, int y, int width, int height, uint32_t color)
 {
     for (int i = x; i < x + width; i++)
     {
@@ -219,6 +219,14 @@ static void draw_line(int x1, int y1, int x2, int y2, uint32_t color)
             draw_pixel(maxx, i, color);
         }
     }
+}
+
+static void draw_rect(int x, int y, int width, int height, uint32_t color)
+{
+    draw_line(x, y, x + width, y, color);
+    draw_line(x, y, x, y + height, color);
+    draw_line(x + width, y, x + width, y + height, color);
+    draw_line(x, y + height, x + width, y + height, color);
 }
 
 static void draw_circle(int x, int y, int r, uint32_t color)

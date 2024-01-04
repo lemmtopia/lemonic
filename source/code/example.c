@@ -13,7 +13,7 @@ int main(void)
         update_dt();
 
         clear_screen(CORNBLUE);
-        draw_rect(-20, 20, 80, 80, WHITE);
+        fill_rect(-20, 20, 80, 80, WHITE);
         draw_rect(40, 80, 80, 180, BLACK);
         draw_line(20, 69, 20, 140, TOMATO);
         draw_line(42, 69, 50, 140, TOMATO);
