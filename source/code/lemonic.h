@@ -72,6 +72,11 @@ typedef struct vec2_t
     float x, y;
 } vec2_t;
 
+typedef struct rect_t
+{
+    int x, y, width, height;
+} rect_t;
+
 /* data */
 static screen_t screen;
 
@@ -227,6 +232,7 @@ static void draw_rect(int x, int y, int width, int height, uint32_t color)
     draw_line(x, y, x, y + height, color);
     draw_line(x + width, y, x + width, y + height, color);
     draw_line(x, y + height, x + width, y + height, color);
+    draw_pixel(x + width, y + height, color);
 }
 
 static void draw_circle(int x, int y, int r, uint32_t color)
@@ -321,6 +327,22 @@ static void draw_sprite(sprite_t spr, int x, int y)
             draw_pixel(x + i, y + j, spr.pixels[j * spr.width + i]);
         }
     }
+}
+
+static int point_vs_rect(vec2_t v, rect_t r)
+{
+    return (v.x >= r.x && v.x <= r.x + r.width &&
+            v.y >= r.y && v.y <= r.y + r.height);
+}
+
+static int rect_vs_rect(rect_t r1, rect_t r2)
+{
+    if (r1.x + r1.width >= r2.x && r1.x <= r2.x + r2.width &&
+        r1.y + r1.height >= r2.y && r1.y <= r2.y + r2.height)
+    {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 #endif
