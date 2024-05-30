@@ -18,3 +18,7 @@ typedef int b32;
 
 #define TRUE 1
 #define FALSE 0
+
+void lemonic_open_window(const char* title, i32 width, i32 height);
+b8 lemonic_is_running();
+void lemonic_message_loop();
