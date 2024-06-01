@@ -1,47 +1,59 @@
 #include "lemonic.h"
 
-#include <windows.h>
-#include <string.h>
+#include <stdlib.h>
+#include <SDL2/SDL.h>
 
-typedef struct
-{
-    HINSTANCE instance;
-    HWND window;
-} platform_state;
+static SDL_Window* window;
+static SDL_Renderer* renderer;
+static b8 is_running;
 
-static platform_state plat_state;
-b8 is_running = FALSE;
+static SDL_Texture* backbuffer;
+static u32* pixels;
 
-LRESULT CALLBACK WndProc(HWND window, u32 message, WPARAM wparam, LPARAM lparam);
+static i32 window_width;
+static i32 window_height;
 
 void lemonic_open_window(const char* title, i32 width, i32 height)
 {
-    plat_state.instance = GetModuleHandleA(0);
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    {
+        // TODO: logging
+        return;
+    }
 
-    WNDCLASSA wc;
-    memset(&wc, 0, sizeof(WNDCLASSA));
+    window = SDL_CreateWindow(
+        title,
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        width, height, 0);
 
-    wc.lpszClassName = "lemonic_window_class";
-    wc.lpfnWndProc = WndProc;
-    wc.hInstance = plat_state.instance;
-    wc.style = CS_HREDRAW | CS_VREDRAW;
+    if (!window)
+    {
+        // TODO: logging
+        return;
+    }
 
-    // TODO: logging
-    RegisterClassA(&wc);
+    renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // TODO: logging
-    plat_state.window = CreateWindowA(
-	wc.lpszClassName,
-	title,
-	WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-	CW_USEDEFAULT,
-	CW_USEDEFAULT,
-	width, height,
-	0, 0, plat_state.instance, 0);
+    if (!renderer)
+    {
+        // TODO: logging
+        return;
+    }
 
-    i32 show_flags = SW_SHOW;
-    ShowWindow(plat_state.window, show_flags);
-    
+    backbuffer = SDL_CreateTexture(
+            renderer,
+            SDL_PIXELFORMAT_RGB888,
+            SDL_TEXTUREACCESS_STREAMING,
+            width, height);
+
+    // 4 bytes per pixel
+    pixels = malloc(width * height * 4);
+    memset(pixels, 0, width * height * 4);
+
+    window_width = width;
+    window_height = height;
+
     is_running = TRUE;
 }
 
@@ -50,30 +62,23 @@ b8 lemonic_is_running()
     return is_running;
 }
 
-void lemonic_message_loop()
+void lemonic_update()
 {
-    MSG message;
-    if (PeekMessage(&message, 0, 0, 0, PM_REMOVE))
-    {
-	TranslateMessage(&message);
-	DispatchMessageA(&message);
-    }
+    SDL_Event ev;
+    SDL_PollEvent(&ev);
+
+    if (ev.type == SDL_QUIT) is_running = FALSE;
+    
+    SDL_UpdateTexture(backbuffer, 0, pixels, window_width * 4);
+    SDL_RenderCopy(renderer, backbuffer, 0, 0);
+    SDL_RenderPresent(renderer);
 }
 
-LRESULT CALLBACK WndProc(HWND window, u32 message, WPARAM wparam, LPARAM lparam)
+void lemonic_close_window()
 {
-    LRESULT result = 0;
-
-    switch (message)
-    {
-    case WM_QUIT:
-    case WM_DESTROY:
-	is_running = FALSE;
-	break;
-    default:
-	result = DefWindowProc(window, message, wparam, lparam);
-	break;
-    }
-    
-    return result;
+    SDL_DestroyTexture(backbuffer);
+    free(pixels);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }

@@ -6,7 +6,7 @@ int main(void)
 
     while (lemonic_is_running())
     {
-	lemonic_message_loop();
+        lemonic_update();
     }
 
     return 0;

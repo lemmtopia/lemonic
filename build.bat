@@ -1,1 +1,1 @@
-clang source/*.c -o lemonic.exe -luser32 -lgdi32
+gcc source/*.c -o lemonic.exe -lSDL2

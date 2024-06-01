@@ -21,4 +21,5 @@ typedef int b32;
 
 void lemonic_open_window(const char* title, i32 width, i32 height);
 b8 lemonic_is_running();
-void lemonic_message_loop();
+void lemonic_update();
+void lemonic_close_window();
