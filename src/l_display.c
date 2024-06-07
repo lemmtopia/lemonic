@@ -1,4 +1,4 @@
-#include "lemonic.h"
+#include "l_display.h"
 
 #include <stdlib.h>
 #include <SDL2/SDL.h>
@@ -8,13 +8,19 @@ static SDL_Renderer* renderer;
 static b8 is_running;
 
 static SDL_Texture* backbuffer;
-static u32* pixels;
+u32* pixels;
 
-static i32 window_width;
-static i32 window_height;
+i32 window_width;
+i32 window_height;
 
-void lemonic_open_window(const char* title, i32 width, i32 height)
+void lemonic_open_window(const char* title, i32 width, i32 height, i32 window_scale)
 {
+    if (window_scale < 1)
+    {
+        // TODO: logging
+        return;
+    }
+    
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         // TODO: logging
@@ -45,14 +51,14 @@ void lemonic_open_window(const char* title, i32 width, i32 height)
             renderer,
             SDL_PIXELFORMAT_RGB888,
             SDL_TEXTUREACCESS_STREAMING,
-            width, height);
+            width / window_scale, height / window_scale);
+
+    window_width = width / window_scale;
+    window_height = height / window_scale;
 
     // 4 bytes per pixel
-    pixels = malloc(width * height * 4);
-    memset(pixels, 0, width * height * 4);
-
-    window_width = width;
-    window_height = height;
+    pixels = malloc(window_width * window_height * sizeof(u32));
+    memset(pixels, 0, window_width * window_height * sizeof(u32));
 
     is_running = TRUE;
 }

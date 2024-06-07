@@ -1,4 +1,5 @@
-#pragma once
+#ifndef L_TYPES_H
+#define L_TYPES_H
 
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -19,7 +20,4 @@ typedef int b32;
 #define TRUE 1
 #define FALSE 0
 
-void lemonic_open_window(const char* title, i32 width, i32 height);
-b8 lemonic_is_running();
-void lemonic_update();
-void lemonic_close_window();
+#endif
