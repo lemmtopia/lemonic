@@ -14,4 +14,4 @@ PRs are welcome, but please fork it if you want to make a major change.
 
 ## License 
 
-[MIT](https://choosealicense.com/licenses/mit/)
+This project is licensed under the zlib license.
