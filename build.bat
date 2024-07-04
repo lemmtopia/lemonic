@@ -1,1 +1,1 @@
-gcc src/*.c -o lemonic.exe -lSDL2
+gcc source/*.c -o example -lSDL2 -lm
