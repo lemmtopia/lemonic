@@ -6,7 +6,7 @@ Lemonic is yet another library to enjoy game programming.
 
 Just clone this repo! However, you'll need to install SDL2 and GCC on your machine.
 
-To build a project just copy the build.sh (or build.bat if you are on Windows) and change it to your needs (add other libraries and change file names). In Linux, just use the Makefile!
+To build a project on windows, just copy lemonic.h and lemonic.c to a folder and modify build.bat to suit your needs :)
 
 ## Contributing
 
