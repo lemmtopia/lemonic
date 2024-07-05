@@ -19,6 +19,10 @@
 #define FPS 60
 #define TARGET_FRAME_TIME (1000 / FPS)
 
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define ABS(x) (((x)>0)?(x):-(x))
+
 typedef struct screen_t
 {
     int width, height;

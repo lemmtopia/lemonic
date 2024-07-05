@@ -66,6 +66,7 @@ int window_should_close()
 
 void quit_window()
 {
+    free(screen.pixels);
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -94,57 +95,23 @@ void fill_rect(int x, int y, int width, int height, uint32_t color)
 
 void draw_line(int x1, int y1, int x2, int y2, uint32_t color)
 {
-    /* get mins and maxs */
-    int minx = (int)fmin((double)x1, (double)x2);    
-    int maxx = (int)fmax((double)x1, (double)x2);    
-    int miny = (int)fmin((double)y1, (double)y2);    
-    int maxy = (int)fmax((double)y1, (double)y2);    
+    int dx = MAX(x1, x2) - MIN(x1, x2);
+    int dy = MAX(y1, y2) - MIN(y1, y2);
+	
+    int slope = (ABS(dx) > ABS(dy)) ? ABS(dx) : ABS(dy);
 
-    float last_j = 0;
-   
-    /* check if the difference != 0 */
-    if (maxx - minx != 0)
+    float x_step = (float)dx / (float)slope;
+    float y_step = (float)dy / (float)slope;
+    
+    float x = MIN(x1, x2);
+    float y = MIN(y1, y2);
+
+    for (int i = 0; i <= slope; i++)
     {
-        for (int i = miny; i < maxy; i++)
-        {
-            int j = 0;
-            /* check if the difference != 0 */
-            if (maxy - miny != 0)
-            {
-                j = minx + (maxx - minx) * (i - miny) / (maxy - miny);
-            }
-            else 
-            {
-                j = minx + (maxx - minx) * (i - miny);
-            }
+	draw_pixel(x, y, color);
 
-            /* fill the big gaps */
-            if (last_j != 0 && j - last_j > 1)
-            {
-                for (int k = last_j + 1; k < j; k++)
-                {
-                    draw_pixel(k, i, color);
-                }
-            }
-
-            draw_pixel(j, i, color);
-            last_j = j;
-        }
-
-        if (maxy - miny == 0)
-        {
-            for (int i = minx; i < maxx; i++)
-            {
-                draw_pixel(i, maxy, color);
-            }
-        }
-    }
-    else 
-    {
-        for (int i = miny; i < maxy; i++)
-        {
-            draw_pixel(maxx, i, color);
-        }
+	x += x_step;
+	y += y_step;
     }
 }
 
