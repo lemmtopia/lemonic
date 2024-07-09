@@ -23,6 +23,10 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define ABS(x) (((x)>0)?(x):-(x))
 
+#define FONT_WIDTH 5
+#define FONT_HEIGHT 7
+#define FONT_SIZE (FONT_WIDTH * FONT_HEIGHT)
+
 typedef struct screen_t
 {
     int width, height;
@@ -99,5 +103,8 @@ sprite_t load_ppm(char* path);
 void draw_sprite(sprite_t spr, int x, int y);
 int point_vs_rect(vec2_t v, rect_t r);
 int rect_vs_rect(rect_t r1, rect_t r2);
+int is_letter(char c);
+int get_letter_from_char(char c);
+void draw_text(const char* text, int length, int x, int y, uint32_t color);
 
 #endif
