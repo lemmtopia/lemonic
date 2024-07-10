@@ -1,6 +1,17 @@
 # lemonic
 
-Lemonic is yet another library to enjoy game programming.
+**lemonic is yet another library to enjoy game programming.**
+
+lemonic is a raylib clone. Hopefully it will be useful for you due to it's simplicity and ease to set up.
+
+---
+
+## Features
+- Easy to use and setup
+- Written in plain old C99 using snake_case notation
+- Software rendering with a fully functional framebuffer
+- PPM support
+- **Free and open source**
 
 ## Installation
 
