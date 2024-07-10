@@ -4,8 +4,6 @@
 
 lemonic is a raylib clone. Hopefully it will be useful for you due to it's simplicity and ease to set up.
 
----
-
 ## Features
 - Easy to use and setup
 - Written in plain old C99 using snake_case notation
